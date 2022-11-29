@@ -20,22 +20,26 @@ fn main() {
         .collect::<Vec<bool>>();
 
     part_one(lights.clone(), height, stride);
-    part_two(lights.clone(), height, stride);
+    part_two(lights, height, stride);
 }
 
 fn part_one(mut lights: Vec<bool>, height: usize, stride: usize) {
     for _time in 0..100 {
-	lights = lights.iter().enumerate().map(|(index, state)| {
-	    let lit_neighbors = get_neighbors(index, height, stride).filter(|&neighbor_index| {
-		lights[neighbor_index]
-	    }).count();
+        lights = lights
+            .iter()
+            .enumerate()
+            .map(|(index, state)| {
+                let lit_neighbors = get_neighbors(index, height, stride)
+                    .filter(|&neighbor_index| lights[neighbor_index])
+                    .count();
 
-	    if *state {
-		lit_neighbors == 2 || lit_neighbors == 3
-	    } else {
-		lit_neighbors == 3
-	    }
-	}).collect::<Vec<_>>();
+                if *state {
+                    lit_neighbors == 2 || lit_neighbors == 3
+                } else {
+                    lit_neighbors == 3
+                }
+            })
+            .collect::<Vec<_>>();
     }
 
     let answer = lights.iter().filter(|&state| *state).count();
@@ -47,24 +51,28 @@ fn part_two(mut lights: Vec<bool>, height: usize, stride: usize) {
     lights[stride - 1] = true;
     lights[(height - 1) * stride] = true;
     lights[(height - 1) * stride + stride - 1] = true;
-    
+
     for _time in 0..100 {
-	lights = lights.iter().enumerate().map(|(index, state)| {
-	    let lit_neighbors = get_neighbors(index, height, stride).filter(|&neighbor_index| {
-		lights[neighbor_index]
-	    }).count();
+        lights = lights
+            .iter()
+            .enumerate()
+            .map(|(index, state)| {
+                let lit_neighbors = get_neighbors(index, height, stride)
+                    .filter(|&neighbor_index| lights[neighbor_index])
+                    .count();
 
-	    if *state {
-		lit_neighbors == 2 || lit_neighbors == 3
-	    } else {
-		lit_neighbors == 3
-	    }
-	}).collect::<Vec<_>>();
+                if *state {
+                    lit_neighbors == 2 || lit_neighbors == 3
+                } else {
+                    lit_neighbors == 3
+                }
+            })
+            .collect::<Vec<_>>();
 
-	lights[0] = true;
-	lights[stride - 1] = true;
-	lights[(height - 1) * stride] = true;
-	lights[(height - 1) * stride + stride - 1] = true;
+        lights[0] = true;
+        lights[stride - 1] = true;
+        lights[(height - 1) * stride] = true;
+        lights[(height - 1) * stride + stride - 1] = true;
     }
 
     let answer = lights.iter().filter(|&state| *state).count();
