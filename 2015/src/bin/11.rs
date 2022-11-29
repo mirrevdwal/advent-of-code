@@ -4,7 +4,7 @@ fn main() {
     let data = read_to_string("data/11.txt").expect("Could not read datafile");
     let input = data.lines().next().expect("Datafile is empty").to_string();
 
-    let base = 'a' as u8;
+    let base = b'a';
     let password = input
         .chars()
         .map(|character| character as u8)
@@ -60,7 +60,8 @@ fn is_valid(password: Vec<u8>) -> bool {
     }
     if !password
         .windows(3)
-        .any(|window| window[0] + 1 == window[1] && window[1] + 1 == window[2]) {
+        .any(|window| window[0] + 1 == window[1] && window[1] + 1 == window[2])
+    {
         return false;
     }
 
