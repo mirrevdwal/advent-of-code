@@ -6,7 +6,7 @@ fn main() {
 
     let mut value: u128 = 20151125;
     for _i in 1..index {
-	value = (value * 252533) % 33554393;
+        value = (value * 252533) % 33554393;
     }
 
     println!("Part 1: {}", value);
@@ -23,8 +23,8 @@ mod tests {
 
     #[test]
     fn test_index() {
-	assert_eq!(get_index(1, 1), 1);
-	assert_eq!(get_index(2, 4), 14);
-	assert_eq!(get_index(4, 3), 18);
+        assert_eq!(get_index(1, 1), 1);
+        assert_eq!(get_index(2, 4), 14);
+        assert_eq!(get_index(4, 3), 18);
     }
 }
