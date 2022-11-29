@@ -23,7 +23,7 @@ fn main() {
                 .filter_map(|property| {
                     let (item, amount) = property
                         .split_once(": ")
-                        .expect(&format!("Could not split propery {property}"));
+                        .unwrap_or_else(|| panic!("Could not split propery {property}"));
                     let amount = amount.parse::<usize>().ok()?;
                     Some((item, amount))
                 })
@@ -52,12 +52,12 @@ fn main() {
                 *amount
                     != known_properties
                         .get(property)
-                        .expect(&format!("Could not find property {property}"))
+                        .unwrap_or_else(|| panic!("Could not find property {property}"))
                         .1
             }) {
                 return None;
             }
-	    Some(name)
+            Some(name)
         })
         .collect::<Vec<_>>();
 
@@ -69,7 +69,7 @@ fn main() {
             if !properties.iter().all(|(property, amount)| {
                 let (property_type, known_amount) = known_properties
                     .get(property)
-                    .expect(&format!("Could not find property {property}"));
+                    .unwrap_or_else(|| panic!("Could not find property {property}"));
 
                 match property_type {
                     PropertyType::Smaller => amount < known_amount,
@@ -77,9 +77,9 @@ fn main() {
                     PropertyType::Greater => amount > known_amount,
                 }
             }) {
-		return None;
+                return None;
             }
-	    Some(name)
+            Some(name)
         })
         .collect::<Vec<_>>();
 
