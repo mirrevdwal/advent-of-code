@@ -34,7 +34,8 @@ fn part_one(input: usize, multiplier: usize) -> usize {
         .into_iter()
         .enumerate()
         .find(|(_number, presents)| presents > &input)
-        .expect("Could not find house with enough presents").0
+        .expect("Could not find house with enough presents")
+        .0
 }
 
 fn part_two(input: usize, multiplier: usize) -> usize {
@@ -42,7 +43,7 @@ fn part_two(input: usize, multiplier: usize) -> usize {
 
     for elf in 1..=(input / multiplier) {
         let mut house_number = elf;
-        while house_number < input / multiplier && house_number < 51* elf {
+        while house_number < input / multiplier && house_number < 51 * elf {
             presents[house_number] += elf * multiplier;
             house_number += elf;
         }
@@ -52,6 +53,6 @@ fn part_two(input: usize, multiplier: usize) -> usize {
         .into_iter()
         .enumerate()
         .find(|(_number, presents)| presents > &input)
-        .expect("Could not find house with enough presents").0
+        .expect("Could not find house with enough presents")
+        .0
 }
-
