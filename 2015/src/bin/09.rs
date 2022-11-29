@@ -54,12 +54,7 @@ fn main() {
         .map(|combination| {
             combination
                 .windows(2)
-                .map(|pair| {
-                    paths
-                        .get(&(*pair[0], *pair[1]))
-                        .cloned()
-                        .unwrap_or(0)
-                })
+                .map(|pair| paths.get(&(*pair[0], *pair[1])).cloned().unwrap_or(0))
                 .sum::<u32>()
         })
         .max()
