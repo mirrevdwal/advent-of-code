@@ -56,10 +56,10 @@ fn part_one(names: Vec<&String>, scores: HashMap<(String, String), i32>) -> i32 
                     let &name2 = &names[1];
                     let score1 = scores
                         .get(&(name1.to_string(), name2.to_string()))
-                        .expect(&format!("Could not find score for {name1}, {name2}"));
+                        .unwrap_or_else(|| panic!("Could not find score for {name1}, {name2}"));
                     let score2 = scores
                         .get(&(name2.to_string(), name1.to_string()))
-                        .expect(&format!("Could not find score for {name2}, {name1}"));
+                        .unwrap_or_else(|| panic!("Could not find score for {name2}, {name1}"));
 
                     score1 + score2
                 })
@@ -74,7 +74,7 @@ fn part_two(names: Vec<&String>, scores: HashMap<(String, String), i32>) -> i32 
         .iter()
         .permutations(names.len())
         .map(|mut circle| {
-	    let mut worst_pair = i32::MAX;
+            let mut worst_pair = i32::MAX;
             circle.push(circle[0]);
             circle
                 .windows(2)
@@ -83,18 +83,19 @@ fn part_two(names: Vec<&String>, scores: HashMap<(String, String), i32>) -> i32 
                     let &name2 = &names[1];
                     let score1 = scores
                         .get(&(name1.to_string(), name2.to_string()))
-                        .expect(&format!("Could not find score for {name1}, {name2}"));
+                        .unwrap_or_else(|| panic!("Could not find score for {name1}, {name2}"));
                     let score2 = scores
                         .get(&(name2.to_string(), name1.to_string()))
-                        .expect(&format!("Could not find score for {name2}, {name1}"));
+                        .unwrap_or_else(|| panic!("Could not find score for {name2}, {name1}"));
 
-		    if score1 + score2 < worst_pair {
-			worst_pair = score1 + score2;
-		    }
+                    if score1 + score2 < worst_pair {
+                        worst_pair = score1 + score2;
+                    }
 
                     score1 + score2
                 })
-                .sum::<i32>() - worst_pair
+                .sum::<i32>()
+                - worst_pair
         })
         .max()
         .expect("Could not find maximum score")
@@ -105,7 +106,7 @@ fn parse_data(data: String, regex: Regex) -> Vec<Vec<String>> {
         .map(|line| {
             let capture = regex
                 .captures_iter(line)
-                .nth(0)
+                .next()
                 .expect("Entry did not match expected format");
             let person1: String = capture[1].to_owned();
             let win: String = capture[2].to_owned();
