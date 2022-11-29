@@ -17,26 +17,34 @@ fn part_one() {
     let instructions = parse_data(data, regex);
 
     for instruction in instructions {
-	let command = &instruction[0];
-	let start_row = instruction[1].parse::<usize>().expect("Could not parse start row as integer");
-	let start_col = instruction[2].parse::<usize>().expect("Could not parse start column as integer");
-	let stop_row = instruction[3].parse::<usize>().expect("Could not parse stop row as integer");
-	let stop_col = instruction[4].parse::<usize>().expect("Could not parse stop column as integer");
+        let command = &instruction[0];
+        let start_row = instruction[1]
+            .parse::<usize>()
+            .expect("Could not parse start row as integer");
+        let start_col = instruction[2]
+            .parse::<usize>()
+            .expect("Could not parse start column as integer");
+        let stop_row = instruction[3]
+            .parse::<usize>()
+            .expect("Could not parse stop row as integer");
+        let stop_col = instruction[4]
+            .parse::<usize>()
+            .expect("Could not parse stop column as integer");
 
-	for row in start_row..=stop_row {
-	    for col in start_col..=stop_col {
-		if command == "turn on" {
-		    lights[row][col] = true;
-		} else if command == "turn off" {
-		    lights[row][col] = false;
-		} else {
-		    lights[row][col] = !lights[row][col]
-		}
-	    }
-	}
+        (start_row..=stop_row).for_each(|row| {
+            (start_col..=stop_col).for_each(|col| {
+                if command == "turn on" {
+                    lights[row][col] = true;
+                } else if command == "turn off" {
+                    lights[row][col] = false;
+                } else {
+                    lights[row][col] = !lights[row][col]
+                }
+            })
+        })
     }
 
-    let lights_on = lights.iter().flatten().filter(|&&light| light == true).count();
+    let lights_on = lights.iter().flatten().filter(|&&light| light).count();
 
     println!("Part 1: {lights_on}");
 }
@@ -53,23 +61,31 @@ fn part_two() {
     let instructions = parse_data(data, regex);
 
     for instruction in instructions {
-	let command = &instruction[0];
-	let start_row = instruction[1].parse::<usize>().expect("Could not parse start row as integer");
-	let start_col = instruction[2].parse::<usize>().expect("Could not parse start column as integer");
-	let stop_row = instruction[3].parse::<usize>().expect("Could not parse stop row as integer");
-	let stop_col = instruction[4].parse::<usize>().expect("Could not parse stop column as integer");
+        let command = &instruction[0];
+        let start_row = instruction[1]
+            .parse::<usize>()
+            .expect("Could not parse start row as integer");
+        let start_col = instruction[2]
+            .parse::<usize>()
+            .expect("Could not parse start column as integer");
+        let stop_row = instruction[3]
+            .parse::<usize>()
+            .expect("Could not parse stop row as integer");
+        let stop_col = instruction[4]
+            .parse::<usize>()
+            .expect("Could not parse stop column as integer");
 
-	for row in start_row..=stop_row {
-	    for col in start_col..=stop_col {
-		if command == "turn on" {
-		    lights[row][col] += 1;
-		} else if command == "turn off" {
-		    lights[row][col] = usize::max(1, lights[row][col]) - 1;
-		} else {
-		    lights[row][col] += 2;
-		}
-	    }
-	}
+        (start_row..=stop_row).for_each(|row| {
+            (start_col..=stop_col).for_each(|col| {
+                if command == "turn on" {
+                    lights[row][col] += 1;
+                } else if command == "turn off" {
+                    lights[row][col] = usize::max(1, lights[row][col]) - 1;
+                } else {
+                    lights[row][col] += 2;
+                }
+            })
+        })
     }
 
     let brightness = lights.iter().flatten().sum::<usize>();
@@ -78,14 +94,19 @@ fn part_two() {
 }
 
 fn parse_data(data: String, regex: Regex) -> Vec<Vec<String>> {
-    data.lines().map(|line| {
-	let capture = regex.captures_iter(line).nth(0).expect("Command did not match expected format");
-	let command: String = capture[1].to_owned();
-	let start_row: String = capture[2].to_owned();
-	let start_col: String = capture[3].to_owned();
-	let stop_row: String = capture[4].to_owned();
-	let stop_col: String = capture[5].to_owned();
+    data.lines()
+        .map(|line| {
+            let capture = regex
+                .captures_iter(line)
+                .next()
+                .expect("Command did not match expected format");
+            let command: String = capture[1].to_owned();
+            let start_row: String = capture[2].to_owned();
+            let start_col: String = capture[3].to_owned();
+            let stop_row: String = capture[4].to_owned();
+            let stop_col: String = capture[5].to_owned();
 
-	vec![command, start_row, start_col, stop_row, stop_col]
-    }).collect()
+            vec![command, start_row, start_col, stop_row, stop_col]
+        })
+        .collect()
 }
