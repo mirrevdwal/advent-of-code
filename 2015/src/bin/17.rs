@@ -26,13 +26,15 @@ fn main() {
 
     let mut valid_combinations = Vec::new();
     for num_containers in 1..=containers.len() {
-	valid_combinations = containers.iter().combinations(num_containers).filter(|combination| {
-	    combination.iter().map(|&x| x).sum::<usize>() == eggnog
-	}).collect::<Vec<_>>();
-	if valid_combinations.len() > 0 {
-	    break;
-	}
-    };
+        valid_combinations = containers
+            .iter()
+            .combinations(num_containers)
+            .filter(|combination| combination.iter().copied().sum::<usize>() == eggnog)
+            .collect::<Vec<_>>();
+        if !valid_combinations.is_empty() {
+            break;
+        }
+    }
 
     println!("Part 2: {:?}", valid_combinations.len());
 }
