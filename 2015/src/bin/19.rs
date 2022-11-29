@@ -26,19 +26,17 @@ fn part_one(data: String) {
         .for_each(|(start, end)| {
             replacement_map
                 .entry(start)
-                .or_insert_with(|| Vec::new())
+                .or_insert_with(Vec::new)
                 .push(end);
         });
 
-    let replacements = replacement_map
-        .into_iter()
-        .collect::<Vec<_>>();
+    let replacements = replacement_map.into_iter().collect::<Vec<_>>();
 
     let start_molecule = lines
         .next()
         .expect("No start molecule found after empty line");
 
-    let replaced_strings = get_replacements(&start_molecule, &replacements);
+    let replaced_strings = get_replacements(start_molecule, &replacements);
     let answer = replaced_strings.iter().unique().count();
 
     println!("Part 1: {:?}", answer);
@@ -58,7 +56,7 @@ fn part_two(data: String) {
         .for_each(|(start, end)| {
             replacement_map
                 .entry(end)
-                .or_insert_with(|| Vec::new())
+                .or_insert_with(Vec::new)
                 .push(start);
         });
 
@@ -107,10 +105,7 @@ fn part_two(data: String) {
     println!("Created {} molecules", visited.len());
 }
 
-fn get_replacements(
-    start_molecule: &str,
-    replacements: &Vec<(String, Vec<String>)>,
-) -> Vec<String> {
+fn get_replacements(start_molecule: &str, replacements: &[(String, Vec<String>)]) -> Vec<String> {
     replacements
         .iter()
         .flat_map(|(start, end_vec)| {
