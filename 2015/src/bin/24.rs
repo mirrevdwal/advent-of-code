@@ -14,9 +14,8 @@ fn main() {
 
     for num in 1..packages.len() {
         let combinations = packages.iter().combinations(num);
-        let correct_combinations = combinations.filter(|combination| {
-            (combination).into_iter().map(|&&x| x).sum::<usize>() == total_weight / 3
-        });
+        let correct_combinations = combinations
+            .filter(|combination| (combination).iter().copied().sum::<usize>() == total_weight / 3);
 
         if let Some(lowest_entanglement) = correct_combinations
             .map(|combination| combination.iter().map(|&&x| x).product::<usize>())
@@ -29,9 +28,8 @@ fn main() {
 
     for num in 1..packages.len() {
         let combinations = packages.iter().combinations(num);
-        let correct_combinations = combinations.filter(|combination| {
-            (combination).into_iter().map(|&&x| x).sum::<usize>() == total_weight / 4
-        });
+        let correct_combinations = combinations
+            .filter(|combination| (combination).iter().copied().sum::<usize>() == total_weight / 4);
 
         if let Some(lowest_entanglement) = correct_combinations
             .map(|combination| combination.iter().map(|&&x| x).product::<usize>())
