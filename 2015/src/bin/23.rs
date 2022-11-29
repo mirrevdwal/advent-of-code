@@ -26,7 +26,7 @@ impl Runtime {
     }
 
     fn set_register(&mut self, register: char, value: usize) {
-	self.variables.insert(register, value);
+        self.variables.insert(register, value);
     }
 
     fn run_instructions(
@@ -81,7 +81,7 @@ impl TryFrom<&str> for Instruction {
     type Error = &'static str;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let mut segments = value.split(" ");
+        let mut segments = value.split_whitespace();
 
         let instruction = segments.next().ok_or("Could not find instruction")?;
 
@@ -92,7 +92,7 @@ impl TryFrom<&str> for Instruction {
                     .ok_or("Could not find register for hlf instruction")?
                     .parse::<char>()
                     .map_err(|_| "Could not parse register as char")?;
-                return Ok(Instruction::Half(register));
+                Ok(Instruction::Half(register))
             }
             "tpl" => {
                 let register = segments
@@ -100,7 +100,7 @@ impl TryFrom<&str> for Instruction {
                     .ok_or("Could not find register for tpl instruction")?
                     .parse::<char>()
                     .map_err(|_| "Could not parse register as char")?;
-                return Ok(Instruction::Triple(register));
+                Ok(Instruction::Triple(register))
             }
             "inc" => {
                 let register = segments
@@ -108,7 +108,7 @@ impl TryFrom<&str> for Instruction {
                     .ok_or("Could not find register for inc instruction")?
                     .parse::<char>()
                     .map_err(|_| "Could not parse register as char")?;
-                return Ok(Instruction::Increment(register));
+                Ok(Instruction::Increment(register))
             }
             "jmp" => {
                 let offset = segments
@@ -116,7 +116,7 @@ impl TryFrom<&str> for Instruction {
                     .ok_or("Could not find offset for jmp instruction")?
                     .parse::<isize>()
                     .map_err(|_| "Could not parse offset as isize")?;
-                return Ok(Instruction::Jump(offset));
+                Ok(Instruction::Jump(offset))
             }
             "jie" => {
                 let register = segments
@@ -130,7 +130,7 @@ impl TryFrom<&str> for Instruction {
                     .ok_or("Cound not find offset for jie instruction")?
                     .parse::<isize>()
                     .map_err(|_| "Could not parse register as isize")?;
-                return Ok(Instruction::JumpIfEven(register, offset));
+                Ok(Instruction::JumpIfEven(register, offset))
             }
             "jio" => {
                 let register = segments
@@ -144,9 +144,9 @@ impl TryFrom<&str> for Instruction {
                     .ok_or("Cound not find offset for jio instruction")?
                     .parse::<isize>()
                     .map_err(|_| "Could not parse register as isize")?;
-                return Ok(Instruction::JumpIfOne(register, offset));
+                Ok(Instruction::JumpIfOne(register, offset))
             }
-            _ => return Err("Unexpected instruction"),
+            _ => Err("Unexpected instruction"),
         }
     }
 }
