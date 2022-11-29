@@ -161,7 +161,7 @@ fn tokenize(input: &str) -> Option<Token> {
                 loop {
                     let opt_char = char_iter.peek();
                     if let Some(chr) = opt_char {
-                        if chr.is_digit(10) {
+                        if chr.is_ascii_digit() {
                             value.push(*chr);
                             let _ = char_iter.next();
                         } else {
@@ -200,8 +200,9 @@ fn tokenize(input: &str) -> Option<Token> {
                             if new_environment != ParserEnvironment::Number {
                                 let _ = char_iter.next();
                             }
-                            environment_stack
-                                .push(ParserEnvironment::Array(ArrayEnvironment::AfterValue(values)));
+                            environment_stack.push(ParserEnvironment::Array(
+                                ArrayEnvironment::AfterValue(values),
+                            ));
                             match new_environment {
                                 ParserEnvironment::String => {
                                     parser_environment = ParserEnvironment::String;
@@ -210,14 +211,12 @@ fn tokenize(input: &str) -> Option<Token> {
                                     parser_environment = ParserEnvironment::Number;
                                 }
                                 ParserEnvironment::Array(new_environment) => {
-                                    parser_environment =
-                                        ParserEnvironment::Array(new_environment);
+                                    parser_environment = ParserEnvironment::Array(new_environment);
                                 }
                                 ParserEnvironment::Object(new_environment) => {
-                                    parser_environment =
-                                        ParserEnvironment::Object(new_environment);
+                                    parser_environment = ParserEnvironment::Object(new_environment);
                                 }
-                                ParserEnvironment::Global => unreachable!()
+                                ParserEnvironment::Global => unreachable!(),
                             }
                         } else {
                             panic!("No valid parser environment found in array");
@@ -264,8 +263,9 @@ fn tokenize(input: &str) -> Option<Token> {
                         previous_token = Some(Token::Object(pairs));
                     } else if let Some(new_environment) = get_parse_environment(chr) {
                         if new_environment == ParserEnvironment::String {
-                            environment_stack
-                                .push(ParserEnvironment::Object(ObjectEnvironment::Intermediate(pairs)));
+                            environment_stack.push(ParserEnvironment::Object(
+                                ObjectEnvironment::Intermediate(pairs),
+                            ));
                             parser_environment = ParserEnvironment::String;
                         } else {
                             panic!("Expect object key to be a string");
@@ -274,8 +274,8 @@ fn tokenize(input: &str) -> Option<Token> {
                         panic!("No valid parser environment found in object");
                     }
                 } else {
-		    panic!("No characters left inside object environment");
-		}
+                    panic!("No characters left inside object environment");
+                }
             }
 
             ParserEnvironment::Object(ObjectEnvironment::Intermediate(pairs)) => {
@@ -313,21 +313,19 @@ fn tokenize(input: &str) -> Option<Token> {
                                 parser_environment = ParserEnvironment::Number;
                             }
                             ParserEnvironment::Array(new_environment) => {
-                                parser_environment =
-                                    ParserEnvironment::Array(new_environment);
+                                parser_environment = ParserEnvironment::Array(new_environment);
                             }
                             ParserEnvironment::Object(new_environment) => {
-                                parser_environment =
-                                    ParserEnvironment::Object(new_environment);
+                                parser_environment = ParserEnvironment::Object(new_environment);
                             }
-			    ParserEnvironment::Global => unreachable!(),
+                            ParserEnvironment::Global => unreachable!(),
                         }
                     } else {
                         panic!("No valid parser environment found in array");
                     }
                 } else {
-		    panic!("No characters left inside object environment");
-		}
+                    panic!("No characters left inside object environment");
+                }
                 continue;
             }
 
@@ -363,10 +361,14 @@ fn tokenize(input: &str) -> Option<Token> {
 fn get_parse_environment(character: char) -> Option<ParserEnvironment> {
     match character {
         '"' => Some(ParserEnvironment::String),
-        _ if character.is_digit(10) => Some(ParserEnvironment::Number),
+        _ if character.is_ascii_digit() => Some(ParserEnvironment::Number),
         '-' => Some(ParserEnvironment::Number),
-        '[' => Some(ParserEnvironment::Array(ArrayEnvironment::BeforeValue(Vec::new()))),
-        '{' => Some(ParserEnvironment::Object(ObjectEnvironment::BeforeKey(Vec::new()))),
+        '[' => Some(ParserEnvironment::Array(ArrayEnvironment::BeforeValue(
+            Vec::new(),
+        ))),
+        '{' => Some(ParserEnvironment::Object(ObjectEnvironment::BeforeKey(
+            Vec::new(),
+        ))),
         _ => None,
     }
 }
