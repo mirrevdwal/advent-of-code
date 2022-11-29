@@ -33,19 +33,19 @@ fn main() {
         let max_distance = distances
             .iter()
             .max()
-            .expect(&format!("Could not find maximum distance at time {time}"));
+            .unwrap_or_else(|| panic!("Could not find maximum distance at time {time}"));
 
-        distances
-            .iter()
-            .enumerate()
-            .for_each(|(index, distance)| {
-                if distance == max_distance {
-                    score[index] += 1;
-                }
-            })
+        distances.iter().enumerate().for_each(|(index, distance)| {
+            if distance == max_distance {
+                score[index] += 1;
+            }
+        })
     });
 
-    let answer = score.into_iter().max().expect("Could not find maximum score");
+    let answer = score
+        .into_iter()
+        .max()
+        .expect("Could not find maximum score");
 
     println!("Part 2: {answer}");
 }
@@ -58,7 +58,7 @@ fn distance_after(total_time: usize, speed: usize, fly_time: usize, rest_time: u
     (completed_loops * fly_time + remaining_time) * speed
 }
 
-fn distances_after(total_time: usize, data: &Vec<(usize, usize, usize)>) -> Vec<usize> {
+fn distances_after(total_time: usize, data: &[(usize, usize, usize)]) -> Vec<usize> {
     data.iter()
         .map(|&(speed, fly_time, rest_time)| distance_after(total_time, speed, fly_time, rest_time))
         .collect::<Vec<_>>()
