@@ -25,8 +25,8 @@ fn part_one() {
                         let escaped_char =
                             chars.next().expect("No escaped character after backslash");
                         match escaped_char {
-                            '\\' => memory_string.push_str("\\"),
-                            '"' => memory_string.push_str("\""),
+                            '\\' => memory_string.push('\\'),
+                            '"' => memory_string.push('"'),
                             'x' => {
                                 let hexadecimal: String = chars.by_ref().take(2).collect();
                                 let hex_u32 = u32::from_str_radix(&hexadecimal, 16)
@@ -59,9 +59,9 @@ fn part_two() {
             let mut encoded_string = String::new();
             encoded_string.push('"');
 
-            let mut chars = line.chars();
+            let chars = line.chars();
 
-            while let Some(character) = chars.next() {
+	    for character in chars {
                 match character {
                     '\\' => encoded_string.push_str("\\\\"),
                     '"' => encoded_string.push_str("\\\""),
