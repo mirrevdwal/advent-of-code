@@ -38,8 +38,8 @@ fn main() {
     outfits.sort_by_key(|(cost, _, _)| *cost);
 
     let winning_outfit = outfits.iter().find(|(_, damage, armor)| {
-        let boss_damage = boss.1 - armor;
-        let player_damage = damage - boss.2;
+        let boss_damage = usize::max(boss.1 - armor, 1);
+        let player_damage = usize::max(damage - boss.2, 1);
         let boss_turns = health / boss_damage + if health % boss_damage == 0 { 0 } else { 1 };
         let player_turns = boss.0 / player_damage + if boss.0 % player_damage == 0 { 0 } else { 1 };
         player_turns <= boss_turns
@@ -48,8 +48,8 @@ fn main() {
     println!("Part 1: {:?}", winning_outfit);
 
     let losing_outfit = outfits.iter().rev().find(|(_, damage, armor)| {
-        let boss_damage = if boss.1 > *armor {boss.1 - armor} else {1};
-        let player_damage = if *damage > boss.2 {damage - boss.2} else {1};
+        let boss_damage = if boss.1 > *armor { boss.1 - armor } else { 1 };
+        let player_damage = if *damage > boss.2 { damage - boss.2 } else { 1 };
         let boss_turns = health / boss_damage + if health % boss_damage == 0 { 0 } else { 1 };
         let player_turns = boss.0 / player_damage + if boss.0 % player_damage == 0 { 0 } else { 1 };
         player_turns > boss_turns
