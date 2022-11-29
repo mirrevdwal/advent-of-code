@@ -88,7 +88,13 @@ fn main() {
     let spells = get_spells();
     let effects = get_effects();
 
-    let winning_cost = get_winning_cost(initial_state.clone(), boss, spells.clone(), effects.clone(), Mode::Normal);
+    let winning_cost = get_winning_cost(
+        initial_state.clone(),
+        boss,
+        spells.clone(),
+        effects.clone(),
+        Mode::Normal,
+    );
     println!("Part 1: {:?}", winning_cost);
 
     let winning_cost = get_winning_cost(initial_state, boss, spells, effects, Mode::Hard);
@@ -152,7 +158,13 @@ fn get_effects() -> Vec<Effect> {
     vec![shield, poison, recharge]
 }
 
-fn get_winning_cost(initial_state: State, boss: (usize, usize), spells: Vec<Spell>, effects: Vec<Effect>, mode: Mode) -> usize {
+fn get_winning_cost(
+    initial_state: State,
+    boss: (usize, usize),
+    spells: Vec<Spell>,
+    effects: Vec<Effect>,
+    mode: Mode,
+) -> usize {
     let mut queue = BinaryHeap::new();
     queue.push(Reverse(initial_state));
 
@@ -165,20 +177,20 @@ fn get_winning_cost(initial_state: State, boss: (usize, usize), spells: Vec<Spel
 
         let mut health = current_state.player_health;
 
-	if mode == Mode::Hard && current_state.player_at_turn == PlayerType::Player {
-	    if health <= 1 {
-		continue;
-	    } else {
-		health -= 1;
-	    }
-	}
+        if mode == Mode::Hard && current_state.player_at_turn == PlayerType::Player {
+            if health <= 1 {
+                continue;
+            } else {
+                health -= 1;
+            }
+        }
 
         let mut new_effects = Vec::new();
 
         for effect in current_state.effects {
             let timer = effect.timer - 1;
             if boss_health <= effect.damage {
-		return current_state.cost;
+                return current_state.cost;
             }
             boss_health -= effect.damage;
             armor += effect.armor;
@@ -199,7 +211,7 @@ fn get_winning_cost(initial_state: State, boss: (usize, usize), spells: Vec<Spel
             PlayerType::Player => {
                 for spell in spells.iter() {
                     if boss_health < spell.damage {
-			return current_state.cost + spell.cost;
+                        return current_state.cost + spell.cost;
                     }
                     if spell.cost > mana {
                         continue;
@@ -214,9 +226,9 @@ fn get_winning_cost(initial_state: State, boss: (usize, usize), spells: Vec<Spel
                     }));
                 }
                 for effect in effects.iter() {
-		    if new_effects.contains(effect) {
-			continue;
-		    }
+                    if new_effects.contains(effect) {
+                        continue;
+                    }
                     if effect.cost > mana {
                         continue;
                     }
